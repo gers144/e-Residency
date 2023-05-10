@@ -1,0 +1,142 @@
+install.packages("CausalImpact")
+
+library(tidyverse)
+library(lubridate)
+library(CausalImpact)
+library(readxl)
+data_eres <- read_excel("/Users/nikitavlassenkov/Desktop/eres_cit_res.xlsx") # load the data in
+
+
+#Brazil
+
+andmed_lai <- read_excel("/Users/nikitavlassenkov/Desktop/eres_cit_res.xlsx") %>% select(country, value_residence, date) %>% pivot_wider(names_from = country, values_from = value_residence)
+
+andmed_analysis <- andmed_lai %>%
+  select(-Thailand, -"South Africa", -Singapore, -date) %>%
+  relocate(Brazil)
+
+andmed_analysis <- andmed_analysis %>%
+  replace(is.na(.), 0)
+
+andmed_lai$date
+
+pre.period <- c(1, 75)
+post.period <- c(76, 96)
+
+impact <- CausalImpact(zoo(andmed_analysis), pre.period, post.period, model.args = list(niter = 5000, nseasons = 12))
+
+summary(impact)
+summary(impact, "report")
+plot(impact)
+
+graafik_brazil <- plot(impact)
+graafik_brazil + 
+  theme_minimal() +
+  labs(title = "Impact of opening a pickup-location in Brazil")
+
+
+
+#Thailand
+
+andmed_lai_Thailand <- read_excel("/Users/nikitavlassenkov/Desktop/eres_cit_res.xlsx") %>% select(country, value_residence, date) %>% pivot_wider(names_from = country, values_from = value_residence)
+andmed_analysis_Thailand <- andmed_lai_Thailand %>%
+  select(-Brazil, -"South Africa", -Singapore, -date) %>%
+  relocate(Thailand)
+
+andmed_analysis_Thailand <- andmed_analysis_Thailand %>%
+  replace(is.na(.), 0)
+
+andmed_lai_Thailand$date
+
+pre.period <- c(1, 75)
+post.period <- c(76, 96)
+
+impact_Thailand <- CausalImpact(zoo(andmed_analysis_Thailand), pre.period, post.period, model.args = list(niter = 5000, nseasons = 12))
+summary(impact_Thailand)
+summary(impact_Thailand, "report")
+plot(impact_Thailand)
+
+graafik_Thailand <- plot(impact_Thailand)
+graafik_Thailand + 
+  theme_minimal() +
+  labs(title = "Impact of opening a pickup-location in Thailand")
+
+
+#Singapore
+
+andmed_lai_Singapore <- read_excel("/Users/nikitavlassenkov/Desktop/eres_cit_res.xlsx") %>% select(country, value_residence, date) %>% pivot_wider(names_from = country, values_from = value_residence)
+andmed_analysis_Singapore <- andmed_lai_Singapore %>%
+  select(-Brazil, -"South Africa", -Thailand, -date) %>%
+  relocate(Singapore)
+
+andmed_analysis_Singapore <- andmed_analysis_Singapore %>%
+  replace(is.na(.), 0)
+
+andmed_lai_Singapore$date
+
+pre.period <- c(1, 75)
+post.period <- c(76, 96)
+
+impact_Singapore <- CausalImpact(zoo(andmed_analysis_Singapore), pre.period, post.period, model.args = list(niter = 5000, nseasons = 12))
+summary(impact_Singapore)
+summary(impact_Singapore, "report")
+plot(impact_Singapore)
+
+graafik_Singapore <- plot(impact_Singapore)
+graafik_Singapore + 
+  theme_minimal() +
+  labs(title = "Impact of opening a pickup-location in Singapore")
+
+
+#South Africa
+andmed_lai <- read_excel("/Users/nikitavlassenkov/Desktop/eres_cit_res.xlsx") %>% select(country, value_residence, date) %>% pivot_wider(names_from = country, values_from = value_residence)
+
+
+andmed_lai_SouthAfrica <- read_excel("/Users/nikitavlassenkov/Desktop/eres_cit_res.xlsx") %>% select(country, value_residence, date) %>% pivot_wider(names_from = country, values_from = value_residence)
+
+
+andmed_lai_SouthAfrica<- andmed_lai_SouthAfrica %>%
+  rename(South_Africa = "South Africa")
+
+
+andmed_analysis_SouthAfrica <- andmed_lai_SouthAfrica %>%
+  select(-Brazil, -Singapore, -Thailand, -date) %>%
+  relocate("South_Africa")
+
+andmed_analysis_SouthAfrica <- andmed_analysis_SouthAfrica %>%
+  replace(is.na(.), 0)
+
+andmed_lai_SouthAfrica$date
+
+pre.period <- c(1, 75)
+post.period <- c(76, 96)
+
+impact_SouthAfrica <- CausalImpact(zoo(andmed_analysis_SouthAfrica), pre.period, post.period, model.args = list(niter = 5000, nseasons = 12))
+summary(impact_SouthAfrica)
+summary(impact_SouthAfrica, "report")
+plot(impact_SouthAfrica)
+
+graafik_SouthAfrica <- plot(impact_SouthAfrica)
+graafik_SouthAfrica + 
+  theme_minimal() +
+  labs(title = "Impact of opening a pickup-location in SouthAfrica")
+
+#Malaysia
+
+andmed_lai_Mala <- read_excel("/Users/nikitavlassenkov/Desktop/eres_cit_res.xlsx") %>% select(country, value_residence, date) %>% pivot_wider(names_from = country, values_from = value_residence)
+andmed_analysis_Mala <- andmed_lai_Mala %>%
+  select(-Brazil, -"South Africa", -Thailand, -Singapore, -date ) %>%
+  relocate(Malaysia)
+
+andmed_analysis_Mala <- andmed_analysis_Mala %>%
+  replace(is.na(.), 0)
+
+andmed_lai_Mala$date
+
+pre.period <- c(1, 75)
+post.period <- c(76, 96)
+
+impact_Mala <- CausalImpact(zoo(andmed_analysis_Mala), pre.period, post.period, model.args = list(niter = 5000, nseasons = 12))
+summary(impact_Mala)
+summary(impact_Mala, "report")
+plot(impact_Mala)
